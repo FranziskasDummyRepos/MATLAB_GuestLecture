@@ -73,13 +73,11 @@ pullChanges = false;
 if pullChanges
     statusDetails = status(repo);
     disp(statusDetails)
-    pull(repo,Username=githubUser,Token=getSecret("githubToken"));
-    statusDetails = status(repo);
-    disp(statusDetails)
+    pull(repo,Username=githubUser,Token=getSecret("githubToken"));    
 end
 %%
 %[text] ## Change a file and commit locally
-%[text] Execise: Make a small change to the README.md and write a descriptive commit message. Commit the change and inspect the local and remote repository.
+%[text] **Exercise**: Make a small change to the README.md and write a descriptive commit message. Commit the change and inspect the local and remote repository.
 commitChanges = false;
 filesToCommit = "README.md";
 commitMessage = "my commit message";
