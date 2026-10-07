@@ -54,7 +54,6 @@ detected correctly.
 - [src/analyzeCoins.m](src/analyzeCoins.m) contains the existing
   image-analysis solution to explore after the discussion.
 - `AGENTS.md` contains rules for coding agents and Git work.
-- `docs/` contains the workshop handouts and instructor guide.
 - [docs/matlabGitCheatsheet.m](docs/matlabGitCheatsheet.m) is a runnable
   live-script guide to MATLAB Git commands and token storage. Run one
   section at a time; its action switches are initially `false`.
