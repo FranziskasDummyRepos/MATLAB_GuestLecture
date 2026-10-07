@@ -2,18 +2,19 @@
 %[text] Use MATLAB R2026a and your own GitHub repository. Work through one section at a time with Run Section. This live script can change local files and publish commits, so do not use Run All for your Git workflow.
 %[text] Each action starts with a switch set to false. To perform it, change its switch to true and run only that section. Set it back to false immediately afterwards. The if block runs its enclosed commands only when the switch is true. With all switches left at false, running the whole file performs no Git or vault operations.
 %[text] MATLAB may mark commands inside a disabled block as unreachable. This is expected while its switch is false; it is not a Git or authentication error.
-%[text] Keep personal settings in an untracked working copy of this sheet outside your repository. Do not commit saved outputs or tokens. Agents must not run the vault or publishing sections; you perform those yourself.
+%[text] Keep personal settings in an untracked working copy of this sheet outside your repository. Do not commit saved outputs or tokens. 
 %%
 %[text] ## Your settings
 %[text] Replace the placeholders with your GitHub user name, repository name, and full local folder path. Run this section once per MATLAB session. These settings are not your token.
-%[text] The local folder is the repository root, containing README.md and src, not the docs folder. For cloning, choose a new destination outside any existing repository. For reopening, use the folder you already cloned. Use a full path appropriate for your computer.
+%[text] The local folder is the repository root on your computer.
 githubUser = "YOUR-USER";
 repositoryName = "YOUR-REPOSITORY";
 repoFolder = "REPLACE-WITH-FULL-LOCAL-FOLDER";
 repositoryURL = "https://github.com/" + githubUser + "/" + repositoryName + ".git";
+repo = gitrepo(repoFolder);
 %%
 %[text] ## Create a GitHub token
-%[text] In GitHub, open Settings > Developer settings > Personal access tokens > Fine-grained tokens. Create a token owned by your account, limited to your course repository, with Contents: Read and write. Choose an expiry date after the course ends. Copy the token when GitHub shows it; GitHub will not show that value again.
+%[text] In GitHub, open Settings \> Developer settings \> Personal access tokens \> Fine-grained tokens. Create a token owned by your account, limited to your course repository, with Contents: Read and write. Choose an expiry date after the course ends. Copy the token when GitHub shows it; GitHub will not show that value again.
 %[text] A token lets MATLAB authenticate to GitHub. Your GitHub account password is not the token. Local operations such as status and commit do not need a token; accessing a private remote and pushing changes do.
 %%
 %[text] ## Store the token once
@@ -33,10 +34,11 @@ end
 %%
 %[text] ## Retrieve the token when needed
 %[text] getSecret retrieves the stored value using exactly the same case-sensitive name. In the clone, pull, and push examples below, Token=getSecret("githubToken") passes it directly to the Git command without printing it or creating a separate token variable.
-%[text] If you need a variable, token = getSecret("githubToken"); retrieves it with output suppressed by the semicolon. That variable still contains the real token: do not display it, inspect it on a shared screen, or save it to a MAT-file. Prefer passing it directly to the Git command.
+%[text] If you need a variable, token = getSecret("githubToken"); retrieves it with output suppressed by the semicolon. That variable still contains the real token: do not display it, inspect it on a shared screen, or save it to a MAT-file. **Prefer passing it directly to the Git command**.
 %[text] Never run getSecret by itself without assigning or consuming its result: that can expose the token in output. Live scripts can save their outputs, so an accidental display can end up in a committed file. The vault keeps secrets out of source files; it is not a barrier against code running as you. Do not ask an agent to retrieve your token.
 %%
 %[text] ## Clone once
+%[text] This step is not necessary for the class exercise, we already cloned the repository when you have access to this script.
 %[text] Create a local copy of your personal GitHub repository. Run Your settings first and check the URL and destination. Skip this section if you already cloned it; use Reopen below instead. A working copy of this sheet outside the repository is also useful before cloning.
 cloneRepository = false;
 if cloneRepository
@@ -50,40 +52,39 @@ end
 reopenRepository = false;
 if reopenRepository
     repo = gitrepo(repoFolder);
-    status(repo)
+    statusDetails = status(repo);
+    disp(statusDetails)
 end
 %%
 %[text] ## Inspect status and history
 %[text] After cloning or reopening, repo identifies the repository for subsequent commands. status shows changed and untracked files; log shows commit history. Neither command displays the actual changed lines: inspect those in MATLAB's comparison tools or in the Editor before committing.
 inspectRepository = false;
 if inspectRepository
-    status(repo)
-    log(repo)
+    statusDetails = status(repo);
+    disp(statusDetails)
+    logDetails = log(repo);
+    disp(logDetails)
 end
 %%
-%[text] ## Pull before starting work
-%[text] First inspect status and resolve unfinished local work. pull downloads and merges remote changes into local files. For the class exercise, start with no uncommitted changes, edit README.md on GitHub, and then pull that change here. If a conflict or rejected operation occurs, stop and ask the instructor; do not discard changes to make the message disappear.
+%[text] ## Pull before starting local work
+%[text] First inspect status and resolve unfinished local work. Pull any remote changes and merge them into local files. 
+%[text] **Exercise**: Make a small change to the README.md on GitHub and then pull that change here. 
 pullChanges = false;
 if pullChanges
-    status(repo)
+    statusDetails = status(repo);
+    disp(statusDetails)
     pull(repo,Username=githubUser,Token=getSecret("githubToken"));
-    status(repo)
+    statusDetails = status(repo);
+    disp(statusDetails)
 end
 %%
-%[text] ## Edit, run, and inspect
-%[text] Make one small change, such as improving the project description in README.md or an image title in src/analyzeCoins.m. Save the file. If you changed code, run it and inspect the output. For detection changes, compare the reported count with your manual count and inspect the binary image as well.
-%[text] The commit example below uses README.md. Change filesToCommit to the files you actually edited. Paths are relative to the repository root. A related code and documentation change can include both src/analyzeCoins.m and README.md in a string array. Only include files you have reviewed.
-%%
-%[text] ## Add a file and commit locally
-%[text] add marks a new file for inclusion in the repository. commit records a local snapshot with your message; it does not publish anything to GitHub. Files explicitly limits this commit to your selected files. Inspect status and your changes before enabling this section.
-%[text] With the README example, improve the description first and use the proposed message below. For another change, write a matching message. After committing, check status for any remaining changes.
+%[text] ## Change a file and commit locally
+%[text] Execise: Make a small change to the README.md and write a descriptive commit message. Commit the change and inspect the local and remote repository.
 commitChanges = false;
 filesToCommit = "README.md";
-commitMessage = "Clarify project description";
+commitMessage = "my commit message";
 if commitChanges
-    add(repo,filesToCommit)
     commit(repo,Message=commitMessage,Files=filesToCommit);
-    status(repo)
 end
 %%
 %[text] ## Write a useful commit message
@@ -91,11 +92,24 @@ end
 %[text] Good examples: "Clarify project description", "Add binary image display", "Filter small background objects", and "Explain coin detection goal". Avoid vague messages such as "changes", "fix", "final version", or "agent update". Describe the result, not which tool made it.
 %%
 %[text] ## Push your commits to GitHub
-%[text] Review your local commits with log first. push publishes pending commits on the branch, not just the last edited file. Check that no credentials, saved outputs, or unrelated changes are included. Enable this section yourself, then inspect the commit and author on GitHub.
+%[text] Review your local commits with log first. `push` publishes pending commits on the branch, not just the last edited file. Check that no credentials, saved outputs, or unrelated changes are included. Enable this section yourself, then inspect the commit and author on GitHub.
 pushChanges = false;
 if pushChanges
-    push(repo,Username=githubUser,Token=getSecret("githubToken"));
-    log(repo)
+    logDetails = log(repo);
+    disp(logDetails)
+    push(repo,Username=githubUser,Token=getSecret("githubToken"));    
+end
+%%
+%[text] ## Add a file and commit locally
+%[text] `add` marks a new file for inclusion in the repository. `commit` records a local snapshot with your message; it does not publish anything to GitHub. Files explicitly limits this commit to your selected files. Inspect status and your changes before enabling this section.
+%[text] **Exercise**: Create a script called `myscript.m.` It may only contain some comments and add it to source control, after adding you can commit and later push.
+commitChanges = false;
+filesToCommit = "myscript.m";
+commitMessage = "my awesome script";
+if commitChanges
+    add(repo,filesToCommit)
+    commit(repo,Message=commitMessage,Files=filesToCommit);
+    status(repo)
 end
 %%
 %[text] ## Replace an expired token
