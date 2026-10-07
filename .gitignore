@@ -1,0 +1,13 @@
+# MATLAB backup and recovery files
+*.asv
+*.m~
+*.mlx~
+
+# MATLAB-generated files and folders
+slprj/
+codegen/
+results/
+
+# Operating system files
+.DS_Store
+Thumbs.db
