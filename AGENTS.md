@@ -19,7 +19,6 @@ Image Processing Toolbox image `coins.png`.
 
 ## Project boundaries
 
-- Work only in `src/` and documentation when needed.
 - Preserve the public interface:
   `results = analyzeCoins(minimumArea,showFigure)`.
 - Do not change default values without explaining why.
@@ -30,7 +29,7 @@ Image Processing Toolbox image `coins.png`.
 - Do not use terminal Git commands, Git GUIs, or edit `.git` files.
 - Use MATLAB Git commands only: `gitclone`, `gitrepo`, `status`, `add`,
   `commit`, `push`, `pull`, and `log`.
-- Never access, print, store, or commit tokens or other secrets.
+- Never print tokens or other secrets.
 - Only commit or push after confirmation. Propose a commit message and wait for the
   user.
 - Inspect repository status before and after changes.
