@@ -1,6 +1,4 @@
-# Franziskas Beginner MATLAB Image Analysis
-
-Improved project description.
+# Beginner MATLAB Image Analysis
 
 This repository is a small practice project for the *Modern Optronics
 Workflows* guest lectures at Hochschule Aalen.
