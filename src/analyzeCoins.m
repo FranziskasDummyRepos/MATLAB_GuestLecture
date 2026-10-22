@@ -18,7 +18,8 @@ end
 
 grayImage = imread("coins.png");
 binaryImage = imbinarize(grayImage);
-cleanImage = bwareaopen(binaryImage,minimumArea);
+filledImage = imfill(binaryImage,"holes");
+cleanImage = bwareaopen(filledImage,minimumArea);
 connectedObjects = bwconncomp(cleanImage);
 objectProperties = regionprops(connectedObjects,"Area");
 objectAreas = [objectProperties.Area];
